@@ -1,0 +1,6 @@
+```json
+{
+    "python_code": "",
+    "ai_message": "Hello! How can I help you today? I can perform actions on your desktop, like opening applications, creating files, or searching the web. Just tell me what you'd like me to do."
+}
+```
