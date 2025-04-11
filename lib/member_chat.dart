@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:legalfriend/app_colors.dart';
-import 'package:legalfriend/light_blue_shadow.dart';
+import 'package:attorney_ai/app_colors.dart';
+// import 'package:attorney_ai/light_blue_shadow.dart';
 
 // ignore: must_be_immutable
 class AIResponse extends StatefulWidget {

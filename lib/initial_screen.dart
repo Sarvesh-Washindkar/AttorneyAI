@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:legalfriend/app_colors.dart';
+// import 'package:attorney_ai/app_colors.dart';
 
 class InitialScreen extends StatelessWidget {
   const InitialScreen({

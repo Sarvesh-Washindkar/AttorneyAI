@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:legalfriend/app_colors.dart';
-import 'package:legalfriend/input_field.dart';
-import 'package:legalfriend/messages_screen.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
+import 'package:attorney_ai/app_colors.dart';
+import 'package:attorney_ai/input_field.dart';
+import 'package:attorney_ai/messages_screen.dart';
 
 import 'initial_screen.dart';
 
@@ -42,6 +43,33 @@ Expected JSON Format in response:
 ]""";
 
   Widget screen = const InitialScreen();
+
+  final gemini = Gemini.instance;
+
+  void getResponse(String incident) {
+    print("GEMINI MODELS");
+    gemini.listModels().then((models) => print(models.toList()));
+
+    Map message = {'isPrompt': false, 'content': 'Analyzing your incident ...'};
+
+    messages.add(message);
+
+    gemini
+        .streamGenerateContent(mainPrompt.replaceAll('<INCIDENT>', incident))
+        .listen(
+      (value) {
+        setState(
+          () {
+            messages.last['content'] += value.output.toString();
+            screen = MessagesScreen(messages: messages);
+          },
+        );
+      },
+      onDone: () => print('COMPLETED'),
+    ).onError((e) {
+      print("GEMINI ERROR: " + e);
+    });
+  }
 
   @override
   void initState() {
