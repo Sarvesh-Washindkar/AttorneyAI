@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:attorney_ai/app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:attorney_ai/app_colors.dart';
@@ -17,6 +18,25 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   IconData suffixIcon = Icons.mic;
+
+  List<String> previousUserPrompts = [
+    "Brand Name Suggestions",
+    "Azure services for ML",
+    "Challenges and components of XAI",
+    "Regression model accuracy matrix",
+    "XAI in healthcare and design",
+    "Positive impacts of AI",
+    "Consistency Models comparison",
+    "Longer message to test the padding and readability of drawer",
+    "Brand Name Suggestions",
+    "Azure services for ML",
+    "Challenges and components of XAI",
+    "Regression model accuracy matrix",
+    "XAI in healthcare and design",
+    "Positive impacts of AI",
+    "Consistency Models comparison",
+    "Longer message to test the padding and readability of drawer"
+  ];
 
   List messages = [];
 
@@ -131,6 +151,8 @@ Expected JSON Format in response:
           )
         ],
       ),
+
+      drawer: AppDrawer(previousUserPrompts: previousUserPrompts),
 
       body: Container(
         // width: double.infinity,
@@ -281,7 +303,7 @@ Expected JSON Format in response:
         ),
       ),
 
-      drawer: Container(),
+      // drawer: Container(),
     );
   }
 }

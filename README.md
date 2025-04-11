@@ -1,4 +1,4 @@
-# attorney_ai
+# legalfriend
 
 A new Flutter project.
 

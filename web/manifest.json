@@ -1,6 +1,6 @@
 {
-    "name": "attorney_ai",
-    "short_name": "attorney_ai",
+    "name": "legalfriend",
+    "short_name": "legalfriend",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
