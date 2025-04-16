@@ -1,59 +1,41 @@
-import 'package:attorney_ai/member_chat.dart';
-import 'package:attorney_ai/my_chat.dart';
 import 'package:flutter/material.dart';
 
+
 // ignore: must_be_immutable
-class MessagesScreen extends StatefulWidget {
-  List messages;
+class MessagesScreen extends StatelessWidget {
+  List<Widget> messages;
 
   MessagesScreen({super.key, required this.messages});
 
-  @override
-  State<MessagesScreen> createState() => _MessagesScreenState();
-}
 
-class _MessagesScreenState extends State<MessagesScreen> {
   TextEditingController messageFieldController = TextEditingController();
-  List<String> months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-  ];
-
-  late String myName;
-  late String previousDate;
-  late String previousMember;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
+
+    
+
     return Column(
       children: [
+
         Expanded(
           child: SingleChildScrollView(
+            
             reverse: true,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
+
               child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: widget.messages.map<Widget>((message) {
-                    return message['isPrompt']
-                        ? MyPrompt(message: message['content'], time: "")
-                        : AIResponse(message: message['content'], time: "");
-                  }).toList()),
+                spacing: 20,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                // children: widget.messages.map<Widget>((message){
+
+                //   return message['isPrompt'] ? MyPrompt(text: message['text']) : AIResponse(text: message['text'], loaderText: message['loaderText']);
+
+                // }).toList()
+
+                children: messages,
+              ),
             ),
           ),
         ),
@@ -73,10 +55,4 @@ class _MessagesScreenState extends State<MessagesScreen> {
       ],
     );
   }
-
-  String getCurrentTime() =>
-      "${(DateTime.now().hour % 12) == 0 ? 12 : (DateTime.now().hour % 12)}:${DateTime.now().minute < 10 ? '0${DateTime.now().minute}' : DateTime.now().minute} ${(DateTime.now().hour % 12) < 12 ? 'AM' : 'PM'}";
-
-  String getCurrentDate() =>
-      "${DateTime.now().day} ${months[DateTime.now().month - 1]}, ${DateTime.now().year}";
 }

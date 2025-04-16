@@ -1,3 +1,4 @@
+import 'package:attorney_ai/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -11,20 +12,22 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: const Color.fromARGB(255, 34, 34, 34),
+      // backgroundColor: const Color.fromARGB(255, 34, 34, 34),
+      backgroundColor: AppColors.tertiaryBackground,
       child: Padding(
-        padding: EdgeInsets.only(top: 45, left: 16, right: 12),
+        padding: const EdgeInsets.only(top: 45, left: 16, right: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-              margin: EdgeInsets.only(right: 20, bottom: 26),
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+              margin: const EdgeInsets.only(right: 20, bottom: 26),
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 81, 81, 81),
+                // color: const Color.fromARGB(255, 81, 81, 81),
+                color: AppColors.secondaryBackground,
                 borderRadius: BorderRadius.circular(45),
               ),
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(
                     Icons.search,
@@ -45,7 +48,7 @@ class AppDrawer extends StatelessWidget {
                 ],
               ),
             ),
-            Text(
+            const Text(
               "Chats",
               style: TextStyle(
                 color: Colors.white,
@@ -55,24 +58,29 @@ class AppDrawer extends StatelessWidget {
             ),
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 itemCount: previousUserPrompts.length,
                 itemBuilder: (context, index) {
                   return ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        overlayColor: const Color.fromARGB(255, 57, 57, 57),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 8),
-                        backgroundColor: const Color.fromARGB(255, 34, 34, 34),
+                        // overlayColor: const Color.fromARGB(255, 57, 57, 57),
+                        overlayColor: AppColors.tertiaryBackground,
+
+                        
+                        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+                        // backgroundColor: const Color.fromARGB(255, 34, 34, 34),
+                        backgroundColor: Colors.transparent,
                         // Colors.red,
                         elevation: 0,
+                        
                         alignment: Alignment.centerLeft,
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(8)))),
                     onPressed: () {},
                     child: Text(
                       previousUserPrompts[index],
-                      style: TextStyle(color: Colors.white, fontSize: 17),
+                      style: const TextStyle(color: Colors.white, fontSize: 17),
                     ),
                   );
                 },

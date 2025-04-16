@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:attorney_ai/app_colors.dart';
-// import 'package:attorney_ai/light_blue_shadow.dart';
 
 // ignore: must_be_immutable
 class InputField extends StatelessWidget {
@@ -58,7 +57,7 @@ class InputField extends StatelessWidget {
             label!,
             textAlign: TextAlign.start,
             style: const TextStyle(
-              color: AppColors.lightText,
+              color: AppColors.secondaryText,
               fontSize: 15,
             ),
           ),
@@ -68,47 +67,53 @@ class InputField extends StatelessWidget {
           ),
         TextField(
           textCapitalization: textCapitalization ?? TextCapitalization.none,
-          cursorColor: AppColors.primaryVariant,
+          cursorColor: Colors.white,
           obscureText: obscureText,
           onChanged: onChanged,
           minLines: minLines,
           maxLines: multiline! ? 10 : 1,
           style: const TextStyle(
             fontSize: 17,
-            color: AppColors.normalText,
+            color: AppColors.primaryText,
           ),
           keyboardType: keyboardType,
           controller: controller,
           onSubmitted: onSubmitted,
           decoration: InputDecoration(
-            suffixIcon: suffixIcon != null
-                ? IconButton(
-                    onPressed: onSuffixIconPressed,
-                    splashRadius: 2,
-                    icon: Icon(suffixIcon, color: AppColors.primary),
-                  )
-                : null,
-            prefixIcon: prefixIcon != null
-                ? IconButton(
-                    splashColor: AppColors.primary,
-                    splashRadius: 1,
-                    onPressed: onPrefixIconPressed,
-                    icon: Icon(prefixIcon, color: AppColors.primary),
-                  )
-                : null,
-            hintStyle: const TextStyle(
-              color: AppColors.lightText,
-              fontWeight: FontWeight.normal,
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
-            hintText: hintText ?? "",
-            filled: true,
-            fillColor: const Color.fromARGB(179, 81, 81, 81),
-            border: OutlineInputBorder(
-              borderSide: BorderSide.none,
-              borderRadius: BorderRadius.circular(15),
-            ),
+              suffixIcon: suffixIcon != null
+                  ? IconButton(
+                      onPressed: onSuffixIconPressed,
+                      splashRadius: 2,
+                      icon: Icon(suffixIcon, color: AppColors.primary),
+                    )
+                  : null,
+              prefixIcon: prefixIcon != null
+                  ? IconButton(
+                      splashColor: AppColors.primary,
+                      splashRadius: 1,
+                      onPressed: onPrefixIconPressed,
+                      icon: Icon(prefixIcon, color: AppColors.primary),
+                    )
+                  : null,
+              hintStyle: const TextStyle(
+                color: AppColors.secondaryText,
+                fontWeight: FontWeight.normal,
+              ),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 18, horizontal: 20),
+              hintText: hintText ?? "",
+              filled: true,
+              fillColor: AppColors.secondaryBackground,
+              
+              border: OutlineInputBorder(
+                // borderSide: BorderSide(color: AppColors.secondaryBackgroundBorder, width: 0.5),
+                borderSide: BorderSide.none,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              focusedBorder: OutlineInputBorder(
+                // borderSide: BorderSide(color: AppColors.secondaryBackgroundBorder, width: 0.5),
+                borderRadius: BorderRadius.circular(50),
+              )
           ),
           enabled: enabled,
           onTap: onTap,

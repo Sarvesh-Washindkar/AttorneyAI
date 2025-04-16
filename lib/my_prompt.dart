@@ -4,12 +4,8 @@ import 'package:attorney_ai/app_colors.dart';
 
 // ignore: must_be_immutable
 class MyPrompt extends StatelessWidget {
-  String message;
+  String text;
   bool isSameMember;
-
-  String time;
-
-  bool isDelivered;
 
   VoidCallback? onLongPress;
 
@@ -19,12 +15,11 @@ class MyPrompt extends StatelessWidget {
 
   MyPrompt({
     super.key,
-    required this.message,
-    required this.time,
+    required this.text,
+    
     this.onLongPress,
     this.onTap,
     this.isSelected = false,
-    this.isDelivered = true,
     this.isSameMember = false,
   });
 
@@ -47,50 +42,24 @@ class MyPrompt extends StatelessWidget {
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                             // color: AppColors.primary.withOpacity(0.15),
-                            color: const Color.fromARGB(179, 81, 81, 81),
-                            borderRadius: BorderRadius.only(
-                              topLeft: const Radius.circular(15),
-                              bottomRight: const Radius.circular(15),
-                              bottomLeft: const Radius.circular(15),
-                              topRight: const Radius.circular(15),
-                            )),
+                            color: AppColors.secondaryBackground,
+                            border: Border.all(color: AppColors.secondaryBackgroundBorder, width: 0.3),
+                            borderRadius: const BorderRadius.all(Radius.circular(15)).copyWith(bottomRight: const Radius.circular(0)),
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              message,
+                              text,
                               style: const TextStyle(
-                                color: AppColors.normalText,
-                                fontSize: 15,
+                                color: AppColors.primaryText,
+                                fontSize: 16,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Positioned(
-                        right: 10,
-                        bottom: 5,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              time,
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Color.fromARGB(255, 233, 233, 233),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            // Icon(
-                            //   isDelivered ? FontAwesomeIcons.check : FontAwesomeIcons.clock,
-                            //   color: Colors.white,
-                            //   size: 12,
-                            // )
-                          ],
-                        ),
-                      ),
+
                     ],
                   ),
                 ),

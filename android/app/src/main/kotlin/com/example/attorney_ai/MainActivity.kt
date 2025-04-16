@@ -1,4 +1,4 @@
-package com.example.legalfriend
+package com.example.attorney_ai
 
 import io.flutter.embedding.android.FlutterActivity
 

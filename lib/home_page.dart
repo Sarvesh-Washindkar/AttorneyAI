@@ -1,8 +1,9 @@
 import 'dart:async';
-
+import 'package:attorney_ai/ai_response.dart';
 import 'package:attorney_ai/app_drawer.dart';
+import 'package:attorney_ai/my_prompt.dart';
+import 'package:attorney_ai/token.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:attorney_ai/app_colors.dart';
 import 'package:attorney_ai/input_field.dart';
 import 'package:attorney_ai/messages_screen.dart';
@@ -19,94 +20,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   IconData suffixIcon = Icons.mic;
 
-  List<String> previousUserPrompts = [
-    "Brand Name Suggestions",
-    "Azure services for ML",
-    "Challenges and components of XAI",
-    "Regression model accuracy matrix",
-    "XAI in healthcare and design",
-    "Positive impacts of AI",
-    "Consistency Models comparison",
-    "Longer message to test the padding and readability of drawer",
-    "Brand Name Suggestions",
-    "Azure services for ML",
-    "Challenges and components of XAI",
-    "Regression model accuracy matrix",
-    "XAI in healthcare and design",
-    "Positive impacts of AI",
-    "Consistency Models comparison",
-    "Longer message to test the padding and readability of drawer"
-  ];
-
-  List messages = [];
-
+  List<Widget> messages = [];
   TextEditingController incidentController = TextEditingController();
 
-  String mainPrompt = """
-  "Given the following FIR complaint description, please list all applicable acts and sections according to the Indian law system in the specified JSON format below. The response must include the title of each act along with the year it was enacted, its sections, and each section must have a title and a very short description. Make sure to include all relevant acts that apply to the context of the complaint, reflecting multiple applicable acts if necessary. FIR Complaint Description: '[<INCIDENT>]'
-
-Expected JSON Format in response:
-[
-    {
-        "act": "Act Title, Year",
-        "sections": [
-            {
-                "title": "Section Title",
-                "description": "Section description."
-            },
-            {
-                "title": "Section Title",
-                "description": "Section description."
-            }
-        ]
-    }
-]""";
-
-  Widget screen = const InitialScreen();
-
-  final gemini = Gemini.instance;
-
-  void getResponse(String incident) {
-    print("GEMINI MODELS");
-    gemini.listModels().then((models) => print(models.toList()));
-
-    Map message = {'isPrompt': false, 'content': 'Analyzing your incident ...'};
-
-    messages.add(message);
-
-    gemini
-        .streamGenerateContent(mainPrompt.replaceAll('<INCIDENT>', incident))
-        .listen(
-      (value) {
-        setState(
-          () {
-            messages.last['content'] += value.output.toString();
-            screen = MessagesScreen(messages: messages);
-          },
-        );
-      },
-      onDone: () => print('COMPLETED'),
-    ).onError((e) {
-      print("GEMINI ERROR: " + e);
-    });
-  }
-
-  @override
-  void initState() {
-    if (messages.isNotEmpty) {
-      screen = MessagesScreen(messages: messages);
-    }
-
-    super.initState();
-  }
+  bool generatingResponse = false;
+  
+  List<String> chats = ["Chat 1", "Chat 2"];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: AppColors.lightBackground,
-      backgroundColor: Color(0x000000),
+      backgroundColor: AppColors.primaryBackground,
       appBar: AppBar(
-        iconTheme: IconThemeData(
+        iconTheme: const IconThemeData(
           color: AppColors.primary,
         ),
 
@@ -121,189 +48,126 @@ Expected JSON Format in response:
                 width: 40,
                 height: 40,
                 child: Image.asset("assets/images/logo.png")),
-            Text(
+            const Text(
               "Attorney",
               style: TextStyle(
                   color: AppColors.primary,
                   fontSize: 26,
                   fontWeight: FontWeight.bold),
             ),
-            Text(
+            const Text(
               "AI",
               style: TextStyle(
-                  color: AppColors.semiLightText,
+                  color: AppColors.secondaryText,
                   fontSize: 26,
                   fontWeight: FontWeight.bold),
             ),
           ],
         ),
-        actions: [
+        actions: const [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: CircleAvatar(
               radius: 16,
+              backgroundColor: Colors.deepPurple,
               child: Text(
                 "S",
-                style: TextStyle(color: AppColors.normalText),
+                style: TextStyle(color: AppColors.primaryText),
               ),
-              backgroundColor: Colors.deepPurple,
             ),
           )
         ],
       ),
 
-      drawer: AppDrawer(previousUserPrompts: previousUserPrompts),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Column(
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: [
 
-      body: Container(
-        // width: double.infinity,
-        //   height: double.infinity,
+          //   ],
+          // ),
 
-        //   decoration: const BoxDecoration(
-        //     gradient: LinearGradient(
-        //       colors: [AppColors.lightBackground, AppColors.lightBlue],
-        //       begin: Alignment.topCenter,
-        //       end: Alignment.bottomCenter,
-        //     ),
-        //   ),
+          Expanded(
+            child: messages.isEmpty
+                ? const InitialScreen()
+                : MessagesScreen(messages: messages),
+          ),
 
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.center,
-            //   children: [
-
-            //   ],
-            // ),
-
-            Expanded(
-              child: screen,
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: InputField(
-                hintText: "Tell me the incident...",
-                suffixIcon: suffixIcon,
-                controller: incidentController,
-                prefixIcon: Icons.attach_file_rounded,
-                onPrefixIconPressed: () {},
-                textCapitalization: TextCapitalization.sentences,
-                multiline: true,
-                onChanged: (text) {
-                  setState(() {
-                    if (text!.isNotEmpty) {
-                      suffixIcon = Icons.send_rounded;
-                    } else {
-                      suffixIcon = Icons.mic;
-                    }
-                  });
-                },
-                onSuffixIconPressed: () {
-                  if (incidentController.text.trim().isNotEmpty) {
-                    String incident = "";
-
-                    setState(() {
-                      messages.add({
-                        'isPrompt': true,
-                        'content': incidentController.text,
-                      });
-                    });
-
-                    // getResponse(incidentController.text);
-                    setState(() {
-                      incident = incidentController.text;
-                      incidentController.text = "";
-                      suffixIcon = Icons.mic;
-
-                      //temporary
-                      messages.add({
-                        'isPrompt': false,
-                        'content': 'Analyzing your incident ...'
-                      });
-                      screen = MessagesScreen(messages: messages);
-                    });
-
-                    Timer(Duration(seconds: 2), () {
-                      if (incident.contains('कल')) {
-                        setState(() {
-                          messages.last['content'] = """
-  [
-    {
-        "act": "भारतीय दंड संहिता, 1860",
-        "sections": [
-            {
-                "title": "धारा 390: डकैती",
-                "description": "सभी डकैतियों में या तो चोरी होती है या जबरन वसूली, जहां एक अपराधी हिंसा या हिंसा की धमकी का उपयोग करके संपत्ति पर कब्जा कर लेता है।"
-            },
-            {
-                "title": "धारा 392: डकैती की सज़ा",
-                "description": "जो कोई डकैती करता है उसे कठोर कारावास की सज़ा दी जाएगी, जिसकी अवधि दस वर्ष तक हो सकती है, और साथ ही वह जुर्माने के लिए भी उत्तरदायी होगा। यदि डकैती सूर्यास्त और सूर्योदय के बीच राजमार्ग पर की जाती है, तो कारावास चौदह वर्ष तक हो सकता है।"
-            },
-            {
-                "title": "धारा 378: चोरी",
-                "description": "जो कोई किसी व्यक्ति की अनुमति के बिना कोई भी चल संपत्ति बेईमानी से उसके कब्जे से निकालने का इरादा रखते हुए, उस संपत्ति को इस इरादे से ले जाता है, वह चोरी करता है।"
-            },
-            {
-                "title": "धारा 506: आपराधिक धमकी की सज़ा",
-                "description": "जो कोई आपराधिक धमकी का अपराध करता है, उसे दो वर्ष तक के कारावास, या जुर्माने, या दोनों से दंडित किया जाएगा।"
-            }
-        ]
-    }
-]
-                              """;
-
-                          screen = MessagesScreen(messages: messages);
-                        });
-                      } else {
-                        setState(() {
-                          messages.last['content'] = """
-                                    [
-        {
-            "act": "Indian Penal Code, 1860",
-            "sections": [
-                {
-                    "title": "Section 441: Criminal Trespass",
-                    "description": "Whoever enters into or upon property in the possession of another with intent to commit an offense or to intimidate, insult, or annoy any person in possession of such property."
-                },
-                {
-                    "title": "Section 447: Punishment for Criminal Trespass",
-                    "description": "Whoever commits criminal trespass shall be punished with imprisonment of either description for a term which may extend to three months, or with a fine which may extend to five hundred rupees, or with both."
-                },
-                {
-                    "title": "Section 503: Criminal Intimidation",
-                    "description": "Whoever threatens another with any injury to his person, reputation, or property, with intent to cause alarm to that person or to cause him to do or omit to do any act which he is not legally bound to do or omit, as the means of avoiding the execution of such threat."
-                },
-                {
-                    "title": "Section 506: Punishment for Criminal Intimidation",
-                    "description": "Whoever commits the offense of criminal intimidation shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
-                },
-                {
-                    "title": "Section 425: Mischief",
-                    "description": "Whoever with intent to cause, or knowing that he is likely to cause, wrongful loss or damage to the public or to any person, causes the destruction of any property, or any change in it which destroys or diminishes its value or utility, commits 'mischief'."
-                },
-                {
-                    "title": "Section 427: Mischief Causing Damage",
-                    "description": "Whoever commits mischief and thereby causes loss or damage to the amount of fifty rupees or upwards, shall be punished with imprisonment of either description for a term which may extend to two years, or with fine, or with both."
-                }
-            ]
-        }
-    ]
-                              """;
-
-                          screen = MessagesScreen(messages: messages);
-                        });
-                      }
-                    });
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: InputField(
+              hintText: "Tell me the incident...",
+              enabled: !generatingResponse,
+              suffixIcon:  suffixIcon,
+              controller: incidentController,
+              prefixIcon: Icons.add,
+              onPrefixIconPressed: () {},
+              textCapitalization: TextCapitalization.sentences,
+              multiline: true,
+              onChanged: (text) {
+                setState(() {
+                  if (text!.isNotEmpty) {
+                    suffixIcon = Icons.send_rounded;
+                  } else {
+                    suffixIcon = Icons.mic;
                   }
-                },
-              ),
-            )
-          ],
-        ),
+                });
+              },
+              onSuffixIconPressed: () {
+                if (incidentController.text.trim().isNotEmpty) {
+                  setState(() {
+                    messages.add(MyPrompt(text: incidentController.text));
+                    messages.add(AIResponse(tokens: const [], loaderText: 'Analyzing your incident', generating: true,));
+
+                    incidentController.text = "";
+                    suffixIcon = Icons.mic;
+                    generatingResponse = true;
+                  });
+
+
+                  
+
+                  Timer(const Duration(seconds: 5), () {
+                    List words =
+                        """According to your incident these are the acts and sections that are applicable: \n
+1. Indian Penal Code, 1860: \n
+  a. Section 441: Criminal Trespass - Whoever enters into or upon property in the possession of another with intent to commit an offense or to intimidate, insult, or annoy any person in possession of such property.\n
+  b. Section 447: Punishment for Criminal Trespass - Whoever commits criminal trespass shall be punished with imprisonment of either description for a term which may extend to three months, or with a fine which may extend to five hundred rupees, or with both.\n
+  c. Section 503: Criminal Intimidation - Whoever threatens another with any injury to his person, reputation, or property, with intent to cause alarm to that person or to cause him to do or omit to do any act which he is not legally bound to do or omit, as the means of avoiding the execution of such threat.
+""".split(' ');
+                    int i = 0;
+
+                    List<Token> tokens = [];
+
+
+                    // Start Generation
+
+                    Timer.periodic(const Duration(milliseconds: 100), (timer) {
+                      setState(() {
+                        tokens.add(Token(text: words[i] +" "));
+                        messages.last = AIResponse( tokens: tokens, loaderText: '', generating: i != words.length - 1,);
+
+                        if (i == words.length - 1) {
+                          timer.cancel();
+                          generatingResponse = false;
+                        } else {
+                          i++;
+                        }
+
+                      });
+                    });
+
+                  });
+                }
+              },
+            ),
+          )
+        ],
       ),
 
-      // drawer: Container(),
+      drawer: AppDrawer(previousUserPrompts: chats),
     );
   }
 }

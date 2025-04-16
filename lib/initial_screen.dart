@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:attorney_ai/app_colors.dart';
 
 class InitialScreen extends StatelessWidget {
   const InitialScreen({
@@ -10,7 +9,7 @@ class InitialScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Spacer(),
+        const Spacer(),
 
         // Icon(Icons.auto_awesome, size: 42, color: AppColors.primary,),
         SizedBox(
@@ -18,7 +17,7 @@ class InitialScreen extends StatelessWidget {
             height: 80,
             child: Image.asset("assets/images/logo.png")),
 
-        Spacer(),
+        const Spacer(),
       ],
     );
   }
